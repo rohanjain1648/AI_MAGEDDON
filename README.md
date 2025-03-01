@@ -330,10 +330,28 @@ NAIVE BAYES':
 
 HAVE A LOOK AT MY PROJECT REPORT IN THE REPOSITORY  which contains output images.
 
+DEPLOYMENT DETAILS:Deployment on Hugging Face Spaces
+1️⃣ Create a Hugging Face Space
+Go to Hugging Face Spaces
+Click "Create new Space"
+Choose "Gradio" as the Space SDK
+Set visibility to "Public" (or Private if needed)
+2️⃣ Upload Files
+Upload app.py
+Upload network_intrusion_model.pkl (your saved model)
+Upload requirements.txt
+3️⃣ Run the App
+Hugging Face will automatically install dependencies
+Your Gradio app will be hosted with a public link
+
+
+
 
 
 THE DEPLOYED LINK IS:
 https://b7f894f91873dc1ab9.gradio.live/
+
+https://huggingface.co/spaces/rohanjain1648/network-intrusion-detection
 
 
 
