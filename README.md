@@ -305,6 +305,7 @@ RANDOM FOREST:
 
 • Random Forest algorithm is a popular machine learning algorithm that is widely used for classification and regression tasks.
 
+
 • The Y_DoS, Y_Probe, Y_R2L, and Y_U2R variables are converted to integers using the astype(int) method, as the Random ForestClassifier algorithm requires integer labels.
 
 
@@ -328,6 +329,11 @@ NAIVE BAYES':
 
 
 HAVE A LOOK AT MY PROJECT REPORT IN THE REPOSITORY
+
+
+
+THE DEPLOYED LINK IS:
+https://b7f894f91873dc1ab9.gradio.live/
 
 
 
