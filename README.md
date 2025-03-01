@@ -267,7 +267,63 @@ print("Cross-validation scores:", scores)
 print("Mean Accuracy:", scores.mean())
 Logic
 Performs 10-fold cross-validation to check model consistency.
+
+
+
+
+
+
+
+
+
+
 Key Takeaways
 ✅ Feature Selection: Used ANOVA & RFE to reduce dimensionality.
 ✅ Model: Decision Tree classifier.
 ✅ Validation: Used cross-validation & confusion matrix for performance checks.
+
+
+
+
+
+
+
+
+
+
+KNN
+
+The KNN classifier is a simple algorithm that classifies a data point based on the class of its k-nearest neighbors. In other words, it identifies the k training examples in the dataset that are closest to the new data point and predicts the class of the new data point based on the most frequent class among those k neighbors.
+
+Hyperparameters: The hyperparameters of the KNN classifier are k (the number of neighbors to consider) and the distance metric used to calculate the distances between data points (such as Euclidean distance, Manhattan distance, or Minkowski distance).
+
+
+
+
+
+RANDOM FOREST:
+
+• Random Forest algorithm is a popular machine learning algorithm that is widely used for classification and regression tasks.
+
+• The Y_DoS, Y_Probe, Y_R2L, and Y_U2R variables are converted to integers using the astype(int) method, as the Random ForestClassifier algorithm requires integer labels.
+
+
+
+
+
+
+
+NAIVE BAYES':
+
+• Naive Bayes is a classification algorithm that makes predictions by calculating the probability of each class given a set of input features.
+
+• The main advantage of Naive Bayes is its simplicity and efficiency.
+
+• Four instances of the classifier are created, one for each type of attack.
+
+
+
+
+
+
+
