@@ -92,93 +92,6 @@ Shape of Testing Dataset: (22543, 43)
 
 
 
-Columns of Existing Training and Test Data Set:
-
-1. duration
-
-2. protocol_type
-
-3. service
-
-4. flag
-
-5. src_bytes
-
-6. dst_bytes
-
-7. land
-
-8. wrong fragment
-
-9. urgent
-
-10. hot
-
-11. num failed logins
-
-12. logged_in
-
-13. num_compromised
-
-14. root shell
-
-15. su_attempted
-
-16. num_root
-
-17. num file creations
-
-18. num_shells
-
-19. num access files
-
-20. num outbound_cmds
-
-21. is host login
-
-22. is guest_login
-
-23. count
-
-24. srv count
-
-25. serror_rate
-
-26. srv_serror_rate
-
-27. rerror rate
-
-28. srv_rerror_rate
-
-29. same srv rate
-
-30. diff srv rate
-
-32. dst host count
-
-31. srv diff host_rate
-
-33. dst host srv count
-
-34. dst host same srv rate
-
-35. dst host diff_srv_rate
-
-36. dst host same src port rate
-
-37. dst_host_srv_diff_host_rate
-
-38. dst host serror rate
-
-39. dst host srv serror rate
-
-40. dst_host_rerror_rate
-
-41. dst host srv rerror rate
-
-42. attack
-
-43. level
 
 
 
@@ -212,13 +125,149 @@ Remote-to-local (R2L): An attacker attempts to gain unauthorized access to a tar
 User-to-root (U2R): An attacker who has already gained access to a user account on a target system tries to elevate their privileges to gain root access and take control of the system.
 
 
+Project Flow and Logic
+Step 1: Data Preprocessing
 
-We've used the attacks, which are classified into the following four categories:
+Load the NSL-KDD dataset (train & test)
+Convert categorical features into numerical values using One-Hot Encoding
+Normalize features to prevent bias from larger values
+Step 2: Feature Selection
 
-Denial-of-service (DoS): An attacker tries to make a machine or network resource unavailable to its intended users by overwhelming it with a flood of traffic or by sending malformed packets that cause the resource to crash or become unavailable.
+Use ANOVA F-test to determine important features
+Apply Recursive Feature Elimination (RFE) to refine the feature set
+Step 3: Model Building
 
-Probe: An attacker sends packets to gather information about a target network or system. This can involve port scanning, fingerprinting, or other techniques that can reveal vulnerabilities or provide information that can be used in a subsequent attack.
+Train a Decision Tree Classifier using the selected features
+Split the dataset into train and test sets
+Step 4: Model Evaluation & Validation
 
-Remote-to-local (R2L): An attacker attempts to gain unauthorized access to a target system from a remote location. This can involve exploiting vulnerabilities in network protocols or applications, or using brute-force techniques to crack passwords.
+Evaluate the model using:
+Accuracy Score
+Recall & F1-score
+Confusion Matrix
+10-fold Cross-validation
 
-User-to-root (U2R): An attacker who has already gained access to a user account on a target system tries to elevate their privileges to gain root access and take control of the system.
+
+
+
+Below is an in-depth explanation of my Intrusion Detection System (IDS) implementation.
+
+Step 1: Importing Required Libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+from sklearn import preprocessing
+from sklearn.feature_selection import RFE
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+import warnings
+warnings.filterwarnings("ignore")
+Logic
+NumPy & Pandas: Handling numerical data and datasets.
+Matplotlib: Visualizing data.
+Scikit-learn modules:
+LabelEncoder, OneHotEncoder: Encoding categorical variables.
+preprocessing: Feature scaling.
+RFE (Recursive Feature Elimination): Selecting important features.
+DecisionTreeClassifier: Model training.
+train_test_split: Splitting data for training & testing.
+Warnings disabled for clean output.
+Step 2: Loading the NSL-KDD Dataset
+
+dataset_train = pd.read_csv('NSL_KDD_Train.csv')
+dataset_test = pd.read_csv('NSL_KDD_Test.csv')
+
+print("Shape of Training Dataset:", dataset_train.shape)
+print("Shape of Testing Dataset:", dataset_test.shape)
+Logic
+Loads NSL-KDD dataset.
+Displays dataset shape.
+Step 3: Assigning Column Names
+
+
+col_names = ["duration", "protocol_type", "service", "flag", "src_bytes", "dst_bytes", 
+             "land", "wrong_fragment", "urgent", "hot", "num_failed_logins", "logged_in", 
+             "num_compromised", "root_shell", "su_attempted", "num_root", "num_file_creations",
+             "num_shells", "num_access_files", "num_outbound_cmds", "is_host_login", "is_guest_login",
+             "count", "srv_count", "serror_rate", "srv_serror_rate", "rerror_rate", "srv_rerror_rate",
+             "same_srv_rate", "diff_srv_rate", "srv_diff_host_rate", "dst_host_count", "dst_host_srv_count",
+             "dst_host_same_srv_rate", "dst_host_diff_srv_rate", "dst_host_same_src_port_rate",
+             "dst_host_srv_diff_host_rate", "dst_host_serror_rate", "dst_host_srv_serror_rate",
+             "dst_host_rerror_rate", "dst_host_srv_rerror_rate", "label"]
+             
+dataset_train = pd.read_csv("NSL_KDD_Train.csv", header=None, names=col_names)
+dataset_test = pd.read_csv("NSL_KDD_Test.csv", header=None, names=col_names)
+Logic
+Defines column names manually.
+Re-loads the dataset using assigned column names.
+Step 4: Exploring Dataset (Data Distribution)
+
+print("Label distribution Training set:")
+print(dataset_train['label'].value_counts())
+
+print("Label distribution Test set:")
+print(dataset_test['label'].value_counts())
+Logic
+Displays the count of attack labels in both train & test sets.
+Step 5: Encoding Categorical Features
+
+# Categorical columns: protocol_type (column 2), service (column 3), flag (column 4).
+categorical_cols = ['protocol_type', 'service', 'flag']
+
+for col in categorical_cols:
+    dataset_train[col] = dataset_train[col].astype('category').cat.codes
+    dataset_test[col] = dataset_test[col].astype('category').cat.codes
+Logic
+Converts categorical columns (protocol_type, service, flag) into numerical values.
+Uses category encoding.
+Step 6: Feature Selection (ANOVA & RFE)
+
+X = dataset_train.drop(['label'], axis=1)
+y = dataset_train['label']
+
+X_test = dataset_test.drop(['label'], axis=1)
+y_test = dataset_test['label']
+
+# Using Recursive Feature Elimination
+dt = DecisionTreeClassifier()
+rfe = RFE(estimator=dt, n_features_to_select=10)
+X_rfe = rfe.fit_transform(X, y)
+X_test_rfe = rfe.transform(X_test)
+Logic
+Splits features (X) and labels (y).
+Uses Recursive Feature Elimination (RFE) to select top 10 features.
+Step 7: Training the Decision Tree Model
+
+X_train, X_val, y_train, y_val = train_test_split(X_rfe, y, test_size=0.2, random_state=42)
+
+dt.fit(X_train, y_train)
+y_pred = dt.predict(X_val)
+Logic
+Splits data into 80% training & 20% validation.
+Trains a Decision Tree Classifier.
+Step 8: Model Evaluation
+
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+print("Accuracy Score:", accuracy_score(y_val, y_pred))
+print("Classification Report:\n", classification_report(y_val, y_pred))
+print("Confusion Matrix:\n", confusion_matrix(y_val, y_pred))
+Logic
+Evaluates the model using:
+Accuracy
+Classification Report (Precision, Recall, F1-score)
+Confusion Matrix
+Step 9: 10-Fold Cross-Validation
+
+from sklearn.model_selection import cross_val_score
+
+scores = cross_val_score(dt, X_rfe, y, cv=10)
+print("Cross-validation scores:", scores)
+print("Mean Accuracy:", scores.mean())
+Logic
+Performs 10-fold cross-validation to check model consistency.
+Key Takeaways
+✅ Feature Selection: Used ANOVA & RFE to reduce dimensionality.
+✅ Model: Decision Tree classifier.
+✅ Validation: Used cross-validation & confusion matrix for performance checks.
